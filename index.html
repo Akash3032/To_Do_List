@@ -11,30 +11,39 @@
       color: #fff;
       font-family: Arial, sans-serif;
       text-align: center;
-      padding: 50px;
+      padding: 30px 15px;
     }
 
     .container {
-      max-width: 400px;
+      max-width: 500px;
       margin: auto;
       background: #1e1e1e;
-      padding: 30px;
+      padding: 30px 20px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
     }
 
+    .input-row {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
     input[type="text"] {
+      flex: 1 1 60%;
       padding: 10px;
-      width: 70%;
       font-size: 16px;
       border: none;
       border-radius: 5px;
+      min-width: 180px;
     }
 
     button {
       padding: 10px 15px;
       font-size: 16px;
-      margin-left: 10px;
       cursor: pointer;
       border: none;
       border-radius: 5px;
@@ -56,6 +65,7 @@
       justify-content: space-between;
       align-items: center;
       border-radius: 5px;
+      word-break: break-word;
     }
 
     li.completed span {
@@ -76,14 +86,28 @@
       margin-top: 20px;
       background-color: #4caf50;
       color: #fff;
+      width: 100%;
+    }
+
+    @media (max-width: 500px) {
+      .input-row {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>📝 To-Do List</h1>
-    <input type="text" id="taskInput" placeholder="Enter a task..." />
-    <button onclick="addTask()">Add</button>
+
+    <div class="input-row">
+      <input type="text" id="taskInput" placeholder="Enter a task..." />
+      <button onclick="addTask()">Add</button>
+    </div>
 
     <ul id="taskList"></ul>
 
@@ -135,7 +159,7 @@
       }
 
       doc.setFontSize(18);
-      doc.text(" Overdraft Required Details", 15, 20);
+      doc.text("Overdraft Required Details", 15, 20);
       doc.setFontSize(12);
 
       let y = 30;
