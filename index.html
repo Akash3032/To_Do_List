@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do List</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      background: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 70%;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      margin-left: 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #61dafb;
+      color: #000;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    li {
+      padding: 10px;
+      background: #2c2c2c;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 5px;
+    }
+
+    li.completed span {
+      text-decoration: line-through;
+      color: #888;
+    }
+
+    .delete-btn {
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .pdf-btn {
+      margin-top: 20px;
+      background-color: #4caf50;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📝 To-Do List</h1>
+    <input type="text" id="taskInput" placeholder="Enter a task..." />
+    <button onclick="addTask()">Add</button>
+
+    <ul id="taskList"></ul>
+
+    <button class="pdf-btn" onclick="saveTasksToPDF()">📄 Save to PDF</button>
+  </div>
+
+  <script>
+    function addTask() {
+      const taskInput = document.getElementById("taskInput");
+      const taskText = taskInput.value.trim();
+      if (taskText === "") return;
+
+      const li = document.createElement("li");
+
+      const span = document.createElement("span");
+      span.textContent = taskText;
+      span.onclick = () => {
+        li.classList.toggle("completed");
+      };
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.className = "delete-btn";
+      deleteBtn.onclick = () => {
+        li.remove();
+      };
+
+      li.appendChild(span);
+      li.appendChild(deleteBtn);
+
+      document.getElementById("taskList").appendChild(li);
+      taskInput.value = "";
+    }
+
+    document.getElementById("taskInput").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        addTask();
+      }
+    });
+
+    async function saveTasksToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const tasks = document.querySelectorAll('#taskList li span');
+
+      if (tasks.length === 0) {
+        alert("List is empty!");
+        return;
+      }
+
+      doc.setFontSize(18);
+      doc.text(" Overdraft Required Details", 15, 20);
+      doc.setFontSize(12);
+
+      let y = 30;
+      tasks.forEach((task, index) => {
+        if (y > 280) {
+          doc.addPage();
+          y = 20;
+        }
+        const text = `${index + 1}. ${task.textContent}`;
+        doc.text(text, 15, y);
+        y += 10;
+      });
+
+      doc.save("todo-list.pdf");
+    }
+  </script>
+</body>
+</html>
